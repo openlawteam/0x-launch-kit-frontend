@@ -6,7 +6,7 @@ export const getWethTokenFromTokensMetaDataByNetworkId = (
     networkId: number,
     tokensMetaData: TokenMetaData[],
 ): Token => {
-    const tokenMetadata = tokensMetaData.find(tokenMetaData => tokenMetaData.symbol === 'WETH') as TokenMetaData;
+    const tokenMetadata = tokensMetaData.find(tokenMetaData => tokenMetaData.symbol === 'weth') as TokenMetaData;
     return {
         address: tokenMetadata.addresses[networkId],
         symbol: tokenMetadata.symbol,
