@@ -1,12 +1,12 @@
 import { KNOWN_TOKENS_META_DATA, TokenMetaData } from '../../common/tokens_meta_data';
 import { getKnownTokens, isERC20AssetData, KnownTokens } from '../../util/known_tokens';
-import { Token, TokenSymbol } from '../../util/types';
+import { Token } from '../../util/types';
 
 const networkId = 50;
 const dummyTokensMetaData: TokenMetaData[] = [
     {
         decimals: 18,
-        symbol: TokenSymbol.Weth,
+        symbol: 'WETH',
         name: 'Wrapped Ether',
         addresses: {
             50: '0x0b1ba0af832d7c05fd64161e0db78e85978e8082',
@@ -15,7 +15,7 @@ const dummyTokensMetaData: TokenMetaData[] = [
     },
     {
         decimals: 18,
-        symbol: TokenSymbol.Zrx,
+        symbol: 'ZRX',
         name: '0x',
         addresses: {
             50: '0x871dd7c2b4b25e1aa18728e9d5f2af4c4e431f5c',
@@ -187,9 +187,7 @@ describe('KnownTokens', () => {
         expect(knownTokens).toBeTruthy();
     });
     it('should throw when TokenMetada[] does not contain weth metadata for the specified networkId', async () => {
-        const wrongTokensMetadata = dummyTokensMetaData.filter(
-            tokenMetaData => tokenMetaData.symbol !== TokenSymbol.Weth,
-        );
+        const wrongTokensMetadata = dummyTokensMetaData.filter(tokenMetaData => tokenMetaData.symbol !== 'WETH');
         expect(() => new KnownTokens(networkId, wrongTokensMetadata)).toThrow();
     });
 

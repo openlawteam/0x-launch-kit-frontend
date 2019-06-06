@@ -9,7 +9,7 @@ import { getKnownTokens } from '../../../util/known_tokens';
 import { getLogger } from '../../../util/logger';
 import { buildMarketOrders, sumTakerAssetFillableOrders } from '../../../util/orders';
 import { tokenAmountInUnits, tokenSymbolToDisplayString } from '../../../util/tokens';
-import { CurrencyPair, OrderSide, OrderType, StoreState, TokenSymbol, UIOrder } from '../../../util/types';
+import { CurrencyPair, OrderSide, OrderType, StoreState, UIOrder } from '../../../util/types';
 
 const logger = getLogger('OrderDetails');
 
@@ -178,8 +178,9 @@ class OrderDetails extends React.Component<Props, State> {
             return '';
         }
         const { feeInZrx } = this.state;
-        const zrxDecimals = getKnownTokens(networkId).getTokenBySymbol(TokenSymbol.Zrx).decimals;
-        return `${tokenAmountInUnits(feeInZrx, zrxDecimals)} ${tokenSymbolToDisplayString(TokenSymbol.Zrx)}`;
+        // ZRX is always 18 decimals
+        const zrxDecimals = 18;
+        return `${tokenAmountInUnits(feeInZrx, zrxDecimals)} ${tokenSymbolToDisplayString('ZRX')}`;
     };
 
     private readonly _getCostStringForRender = () => {

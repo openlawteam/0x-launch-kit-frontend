@@ -8,12 +8,12 @@ import {
     getTransactionHashFromNotification,
 } from '../../util/notifications';
 import { addressFactory } from '../../util/test-utils';
-import { Notification, OrderSide, TokenSymbol } from '../../util/types';
+import { Notification, OrderSide } from '../../util/types';
 
 describe('buildOrderFilledNotification', () => {
     const networkId = 50;
     const knownTokens = getKnownTokens(networkId);
-    const zrxToken = knownTokens.getTokenBySymbol(TokenSymbol.Zrx);
+    const zrxToken = knownTokens.getTokenBySymbol('ZRX');
     const wethToken = knownTokens.getWethToken();
 
     // ZRX/WETH
@@ -24,22 +24,22 @@ describe('buildOrderFilledNotification', () => {
         {
             price: null,
             currencyPair: {
-                base: TokenSymbol.Zrx,
-                quote: TokenSymbol.Weth,
+                base: 'ZRX',
+                quote: 'WETH',
             },
         },
         {
             price: null,
             currencyPair: {
-                base: TokenSymbol.Mkr,
-                quote: TokenSymbol.Weth,
+                base: 'MKR',
+                quote: 'WETH',
             },
         },
         {
             price: null,
             currencyPair: {
-                base: TokenSymbol.Zrx,
-                quote: TokenSymbol.Mkr,
+                base: 'ZRX',
+                quote: 'MKR',
             },
         },
     ];
@@ -108,7 +108,7 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
                 id:
                     '0x1b74fa746dd333eabfbf5125b54882675e384d73f0240a0db580ad4e1b70bcb8cb09f92ea2a1febffe40e6dd3e4e5319a1ca1edf496812274a18039303d4dd508d02',
                 kind: 'Limit',
-                amount: '1000000000000000000',
+                amount: new BigNumber(1000000000000000000),
                 token: {
                     address: '0x2002d3812f58e35f0ea1ffbf80a75a38c32175fa',
                     symbol: 'zrx',
@@ -126,7 +126,7 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
             value: {
                 id: '0x5be9d8c576805c1c05a42af30f4c42eb087aa72e5a28d2dc2ead0fc8b30ee63a',
                 kind: 'Market',
-                amount: '1000000000000000000',
+                amount: new BigNumber(1000000000000000000),
                 token: {
                     address: '0x2002d3812f58e35f0ea1ffbf80a75a38c32175fa',
                     symbol: 'zrx',
@@ -135,7 +135,7 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
                     primaryColor: '#333333',
                 },
                 side: 0,
-                tx: {},
+                tx: Promise.resolve({}),
                 timestamp: '2019-04-17T19:15:17.580Z',
             },
             expectedUrl: 'https://etherscan.io/tx/0x5be9d8c576805c1c05a42af30f4c42eb087aa72e5a28d2dc2ead0fc8b30ee63a',
@@ -145,7 +145,7 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
             value: {
                 id: '0x9883d4efc12ed1b2cec08de856f324388f2fb899543fac709d5c20f2fc701dfb-0',
                 kind: 'OrderFilled',
-                amount: '50000000000000',
+                amount: new BigNumber(50000000000000),
                 token: {
                     address: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
                     symbol: 'weth',
@@ -164,7 +164,7 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
                 id:
                     '0x1be151964ce6dd0a2d05fc43bfb7726998b541e1f97f0dfa8978da41f562bee84b6a64b518d4b0c0e82d09a82f9207ca492a244b4752a559b7d50b7118702cd25f02',
                 kind: 'Limit',
-                amount: '1000000000000000000',
+                amount: new BigNumber(1000000000000000000),
                 token: {
                     address: '0x871dd7c2b4b25e1aa18728e9d5f2af4c4e431f5c',
                     symbol: 'zrx',
@@ -182,7 +182,7 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
             value: {
                 id: '0xb0f540b4d996d05c84fc7acac3c339e85e7aa2f1e62e789facd2ae5fdabea813',
                 kind: 'Market',
-                amount: '1000000000000000000',
+                amount: new BigNumber(1000000000000000000),
                 token: {
                     address: '0x871dd7c2b4b25e1aa18728e9d5f2af4c4e431f5c',
                     symbol: 'zrx',
@@ -191,7 +191,7 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
                     primaryColor: '#333333',
                 },
                 side: 1,
-                tx: {},
+                tx: Promise.resolve({}),
                 timestamp: '2019-04-16T19:10:28.876Z',
             },
             expectedUrl: 'https://etherscan.io/tx/0xb0f540b4d996d05c84fc7acac3c339e85e7aa2f1e62e789facd2ae5fdabea813',
@@ -201,9 +201,9 @@ describe('getTransactionHashFromNotification and getTransactionHashFromNotificat
             value: {
                 id: '0xb0f540b4d996d05c84fc7acac3c339e85e7aa2f1e62e789facd2ae5fdabea813-0',
                 kind: 'OrderFilled',
-                amount: '510000000000000000',
+                amount: new BigNumber(510000000000000000),
                 side: 1,
-                timestamp: '2019-04-16T19:10:28.000Z',
+                timestamp: new Date('2019-04-16T19:10:28.000Z'),
                 token: {
                     address: '0x0b1ba0af832d7c05fd64161e0db78e85978e8082',
                     symbol: 'weth',

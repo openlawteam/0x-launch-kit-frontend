@@ -3,7 +3,7 @@ import { assetDataUtils, ExchangeFillEventArgs, LogWithDecodedArgs } from '0x.js
 import { KNOWN_TOKENS_META_DATA, TokenMetaData } from '../common/tokens_meta_data';
 
 import { getWethTokenFromTokensMetaDataByNetworkId, mapTokensMetaDataToTokenByNetworkId } from './token_meta_data';
-import { Token, TokenSymbol } from './types';
+import { Token } from './types';
 
 export class KnownTokens {
     private readonly _tokens: Token[] = [];
@@ -20,7 +20,7 @@ export class KnownTokens {
         const symbolInLowerCaseScore = symbol.toLowerCase();
         const token = this._tokens.find(t => t.symbol === symbolInLowerCaseScore);
         if (!token) {
-            if (symbolInLowerCaseScore === TokenSymbol.Weth) {
+            if (symbolInLowerCaseScore === 'WETH') {
                 return this.getWethToken();
             }
             throw new Error(`Token with symbol ${symbol} not found in known tokens`);
@@ -105,12 +105,12 @@ export const getColorBySymbol = (symbol: string): string => {
     return token.primaryColor;
 };
 
-export const isZrx = (token: TokenSymbol): boolean => {
-    return token === TokenSymbol.Zrx;
+export const isZrx = (token: string): boolean => {
+    return token === 'ZRX';
 };
 
-export const isWeth = (token: TokenSymbol): boolean => {
-    return token === TokenSymbol.Weth;
+export const isWeth = (token: string): boolean => {
+    return token === 'WETH';
 };
 
 export const isERC20AssetData = (assetData: string): boolean => {

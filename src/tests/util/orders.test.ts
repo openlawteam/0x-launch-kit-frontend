@@ -28,7 +28,7 @@ describe('buildLimitOrder', () => {
             takerAddress: '0x0000000000000000000000000000000000000000',
             takerAssetAmount: new BigNumber('100'),
             takerAssetData: assetDataUtils.encodeERC20AssetData(baseTokenAddress),
-        });
+        } as any);
 
         // when
         const order = await utilOrders.buildLimitOrder(
@@ -77,7 +77,7 @@ describe('buildLimitOrder', () => {
             takerAddress: '0x0000000000000000000000000000000000000000',
             takerAssetAmount: new BigNumber('10'),
             takerAssetData: assetDataUtils.encodeERC20AssetData(quoteTokenAddress),
-        });
+        } as any);
 
         const order = await utilOrders.buildLimitOrder(
             {
@@ -263,7 +263,7 @@ describe('sumTakerAssetFillableOrders', () => {
                     takerAddress: '0x0000000000000000000000000000000000000000',
                     takerAssetAmount: new BigNumber('10'),
                     takerAssetData: assetDataUtils.encodeERC20AssetData(quoteTokenAddress),
-                });
+                } as any);
                 return utilOrders.buildLimitOrder(
                     {
                         account,
