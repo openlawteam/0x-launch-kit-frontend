@@ -149,9 +149,12 @@ export const createBuySellMarketSteps = (
 ): Step[] => {
     const buySellMarketFlow: Step[] = [];
     const tokenToUnlock = side === OrderSide.Buy ? quoteToken : baseToken;
-    const unlockTokenStep = getUnlockTokenStepIfNeeded(tokenToUnlock, tokenBalances, wethTokenBalance);
-    if (unlockTokenStep) {
-        buySellMarketFlow.push(unlockTokenStep);
+
+    if (side === OrderSide.Sell) {
+        const unlockTokenStep = getUnlockTokenStepIfNeeded(tokenToUnlock, tokenBalances, wethTokenBalance);
+        if (unlockTokenStep) {
+            buySellMarketFlow.push(unlockTokenStep);
+        }
     }
 
     // unlock zrx (for fees) if the taker fee is positive
@@ -162,8 +165,8 @@ export const createBuySellMarketSteps = (
         }
     }
 
-    // wrap the necessary ether if necessary
-    if (isWeth(quoteToken.symbol) && wethTokenBalance.balance.isLessThan(amount)) {
+    // wrap the necessary ether if necessary only for sell
+    if (side === OrderSide.Sell && isWeth(quoteToken.symbol) && wethTokenBalance.balance.isLessThan(amount)) {
         const wrapEthStep = getWrapEthStepIfNeeded(amount, price, side, wethTokenBalance);
         if (wrapEthStep) {
             buySellMarketFlow.push(wrapEthStep);

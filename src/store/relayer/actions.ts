@@ -1,6 +1,7 @@
 import { BigNumber, SignedOrder } from '0x.js';
 import { createAction } from 'typesafe-actions';
 
+import { ZERO_ADDRESS } from '../../common/constants';
 import { INSUFFICIENT_ORDERS_TO_FILL_AMOUNT_ERR } from '../../exceptions/common';
 import { InsufficientOrdersAmountException } from '../../exceptions/insufficient_orders_amount_exception';
 import { RelayerException } from '../../exceptions/relayer_exception';
@@ -15,6 +16,7 @@ import { getLogger } from '../../util/logger';
 import { buildLimitOrder, buildMarketOrders, sumTakerAssetFillableOrders } from '../../util/orders';
 import { getTransactionOptions } from '../../util/transactions';
 import { NotificationKind, OrderSide, RelayerState, ThunkCreator, Token, UIOrder, Web3State } from '../../util/types';
+import { updateTokenBalances } from '../blockchain/actions';
 import { getAllCollectibles } from '../collectibles/actions';
 import {
     getBaseToken,
@@ -173,17 +175,37 @@ export const submitMarketOrder: ThunkCreator<Promise<{ txHash: string; amountInR
 
             const contractWrappers = await getContractWrappers();
             const web3Wrapper = await getWeb3Wrapper();
-            const txHash = await contractWrappers.exchange.batchFillOrdersAsync(
-                ordersToFill,
-                amounts,
-                ethAccount,
-                getTransactionOptions(gasPrice),
-            );
+            let txHash = '';
+            if (side === OrderSide.Sell) {
+                txHash = await contractWrappers.exchange.batchFillOrdersAsync(
+                    ordersToFill,
+                    amounts,
+                    ethAccount,
+                    getTransactionOptions(gasPrice),
+                );
+            } else {
+                const transactionHashes = await Promise.all(
+                    ordersToFill.map(async (order, index) => {
+                        return contractWrappers.forwarder.marketBuyOrdersWithEthAsync(
+                            [order],
+                            order.makerAssetAmount,
+                            ethAccount,
+                            amounts[index],
+                            [],
+                            0,
+                            ZERO_ADDRESS,
+                            getTransactionOptions(gasPrice),
+                        );
+                    }),
+                );
+                txHash = transactionHashes[transactionHashes.length - 1];
+            }
 
             const tx = web3Wrapper.awaitTransactionSuccessAsync(txHash);
 
             // tslint:disable-next-line:no-floating-promises
             dispatch(getOrderbookAndUserOrders());
+            dispatch(updateTokenBalances());
             dispatch(
                 addNotifications([
                     {

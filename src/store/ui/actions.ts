@@ -5,7 +5,6 @@ import { COLLECTIBLE_ADDRESS } from '../../common/constants';
 import { InsufficientOrdersAmountException } from '../../exceptions/insufficient_orders_amount_exception';
 import { InsufficientTokenBalanceException } from '../../exceptions/insufficient_token_balance_exception';
 import { SignedOrderException } from '../../exceptions/signed_order_exception';
-import { isWeth } from '../../util/known_tokens';
 import { buildLimitOrder, buildMarketOrders, isDutchAuction } from '../../util/orders';
 import {
     createBasicBuyCollectibleSteps,
@@ -185,7 +184,6 @@ export const startBuySellMarketSteps: ThunkCreator = (amount: BigNumber, side: O
         const tokenBalances = selectors.getTokenBalances(state) as TokenBalance[];
         const wethTokenBalance = selectors.getWethTokenBalance(state) as TokenBalance;
         const totalEthBalance = selectors.getTotalEthBalance(state);
-        const quoteTokenBalance = selectors.getQuoteTokenBalance(state);
         const baseTokenBalance = selectors.getBaseTokenBalance(state);
 
         const orders = side === OrderSide.Buy ? selectors.getOpenSellOrders(state) : selectors.getOpenBuyOrders(state);
@@ -213,11 +211,7 @@ export const startBuySellMarketSteps: ThunkCreator = (amount: BigNumber, side: O
             }
         } else {
             // Case 2: the quote token is wETH and the user does not have enough to wrap and pay orders
-            if (isWeth(quoteToken.symbol) && totalEthBalance.isLessThan(totalFilledAmount)) {
-                throw new InsufficientTokenBalanceException(quoteToken.symbol);
-            }
-            // Case 3: the operation is BUY -> user should have enough QUOTE token and the quoteToken is not wETH
-            if (quoteTokenBalance && quoteTokenBalance.balance.isLessThan(totalFilledAmount)) {
+            if (totalEthBalance.isLessThan(totalFilledAmount)) {
                 throw new InsufficientTokenBalanceException(quoteToken.symbol);
             }
         }
