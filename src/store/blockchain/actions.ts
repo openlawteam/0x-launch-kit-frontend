@@ -342,9 +342,6 @@ const initWalletERC20: ThunkCreator<Promise<any>> = (ethAccount: string, network
         const state = getState();
         const knownTokens = getKnownTokens(networkId);
 
-        const tokenBalances = await Promise.all(
-            knownTokens.getTokens().map(token => tokenToTokenBalance(token, ethAccount)),
-        );
         const currencyPair = getCurrencyPair(state);
         const baseToken = knownTokens.getTokenBySymbol(currencyPair.base);
         const quoteToken = knownTokens.getTokenBySymbol(currencyPair.quote);
@@ -352,7 +349,8 @@ const initWalletERC20: ThunkCreator<Promise<any>> = (ethAccount: string, network
         dispatch(setMarketTokens({ baseToken, quoteToken }));
         // tslint:disable-next-line:no-floating-promises
         dispatch(getOrderbookAndUserOrders());
-        dispatch(setTokenBalances(tokenBalances));
+        dispatch(updateTokenBalances());
+
         try {
             await dispatch(fetchMarkets());
             // For executing this method (setConnectedUserNotifications) is necessary that the setMarkets method is already dispatched, otherwise it wont work (redux-thunk problem), so it's need to be dispatched here
@@ -362,6 +360,24 @@ const initWalletERC20: ThunkCreator<Promise<any>> = (ethAccount: string, network
             // Relayer error
             logger.error('The fetch orders from the relayer failed', error);
         }
+    };
+};
+
+export const updateTokenBalances: ThunkCreator<Promise<any>> = () => {
+    return async (dispatch, getState, { getWeb3Wrapper }) => {
+        const state = getState();
+        const web3Wrapper = await getWeb3Wrapper();
+        const ethAccount = await getEthAccount(state);
+        const networkId = await web3Wrapper.getNetworkIdAsync();
+
+        const knownTokens = getKnownTokens(networkId);
+
+        const tokenBalances = await Promise.all(
+            knownTokens.getTokens().map(token => tokenToTokenBalance(token, ethAccount)),
+        );
+
+        // tslint:disable-next-line:no-floating-promises
+        dispatch(setTokenBalances(tokenBalances));
     };
 };
 

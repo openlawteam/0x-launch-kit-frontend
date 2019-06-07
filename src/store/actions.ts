@@ -1,10 +1,10 @@
 import { MAINNET_ID } from '../common/constants';
-import { getTokenBalance, tokenToTokenBalance } from '../services/tokens';
+import { getTokenBalance } from '../services/tokens';
 import { getWeb3Wrapper } from '../services/web3_wrapper';
 import { getKnownTokens } from '../util/known_tokens';
 import { MARKETPLACES } from '../util/types';
 
-import { setEthBalance, setTokenBalances, setWethBalance, updateGasInfo } from './blockchain/actions';
+import { setEthBalance, setWethBalance, updateGasInfo, updateTokenBalances } from './blockchain/actions';
 import { getAllCollectibles } from './collectibles/actions';
 import { fetchMarkets, setMarketTokens, updateMarketPriceEther } from './market/actions';
 import { getOrderBook, getOrderbookAndUserOrders } from './relayer/actions';
@@ -38,7 +38,7 @@ export const updateStore = () => {
         // Updates based on the current app
         const currentMarketPlace = getCurrentMarketPlace(state);
         if (currentMarketPlace === MARKETPLACES.ERC20) {
-            dispatch(updateERC20Store(ethAccount, networkId));
+            dispatch(updateERC20Store());
         } else {
             dispatch(updateERC721Store(ethAccount));
         }
@@ -51,21 +51,21 @@ export const updateERC721Store = (ethAccount: string) => {
     };
 };
 
-export const updateERC20Store = (ethAccount: string, networkId: number) => {
+export const updateERC20Store = () => {
     return async (dispatch: any, getState: any) => {
         const state = getState();
         try {
+            const web3Wrapper = await getWeb3Wrapper();
+            const networkId = await web3Wrapper.getNetworkIdAsync();
+
             const knownTokens = getKnownTokens(networkId);
-            const tokenBalances = await Promise.all(
-                knownTokens.getTokens().map(token => tokenToTokenBalance(token, ethAccount)),
-            );
             const currencyPair = getCurrencyPair(state);
             const baseToken = knownTokens.getTokenBySymbol(currencyPair.base);
             const quoteToken = knownTokens.getTokenBySymbol(currencyPair.quote);
 
             dispatch(setMarketTokens({ baseToken, quoteToken }));
             dispatch(getOrderbookAndUserOrders());
-            dispatch(setTokenBalances(tokenBalances));
+            dispatch(updateTokenBalances());
             await dispatch(fetchMarkets());
         } catch (error) {
             const knownTokens = getKnownTokens(MAINNET_ID);
