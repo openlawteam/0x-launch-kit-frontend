@@ -44,9 +44,6 @@ const LogoHeader = styled(Logo)`
 `;
 
 const LogoSVGStyled = styled(OpenLawLogoSvg)``;
-// path {
-//     fill: ${props => props.theme.componentsTheme.logoERC20Color};
-// }
 
 const MarketsDropdownHeader = styled<any>(MarketsDropdownContainer)`
     align-items: center;
@@ -76,7 +73,7 @@ const ToolbarContent = (props: Props) => {
             <LogoHeader
                 image={<LogoSVGStyled />}
                 onClick={handleLogoClick}
-                text="" // Launch Kit
+                text="FINANCE"
                 textColor={props.theme.componentsTheme.logoERC20TextColor}
             />
             <MarketsDropdownHeader shouldCloseDropdownBodyOnClick={false} />

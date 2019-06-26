@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
 
-import { ReactComponent as LogoSvg } from '../../../assets/icons/erc721_logo.svg';
+// import { ReactComponent as LogoSvg } from '../../../assets/icons/erc721_logo.svg';
+import { ReactComponent as OpenLawLogoSvg } from '../../../assets/images/openlaw-horizontal-white.svg';
 import { goToHome, goToMyCollectibles } from '../../../store/router/actions';
 import { Theme, themeBreakPoints } from '../../../themes/commons';
 import { Logo } from '../../common/logo';
@@ -41,11 +42,7 @@ const LogoHeader = styled(Logo)`
     ${separatorTopbar}
 `;
 
-const LogoSVGStyled = styled(LogoSvg)`
-    path {
-        fill: ${props => props.theme.componentsTheme.logoERC721Color};
-    }
-`;
+const LogoSVGStyled = styled(OpenLawLogoSvg)``;
 
 const WalletDropdown = styled(WalletConnectionContentContainer)`
     display: none;
@@ -65,7 +62,7 @@ const ToolbarContent = (props: Props) => {
         <LogoHeader
             image={<LogoSVGStyled />}
             onClick={handleLogoClick}
-            text="0x Collectibles"
+            text="FINANCE"
             textColor={props.theme.componentsTheme.logoERC721TextColor}
         />
     );
