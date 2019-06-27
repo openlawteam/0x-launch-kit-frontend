@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import ReactSVG from 'react-svg';
 import styled, { withTheme } from 'styled-components';
 
-// import { ReactComponent as LogoSvg } from '../../../assets/icons/erc20_logo.svg';
 import { ReactComponent as OpenLawLogoSvg } from '../../../assets/images/openlaw-horizontal-white.svg';
 import { Config } from '../../../common/config';
 import { UI_GENERAL_TITLE } from '../../../common/constants';
