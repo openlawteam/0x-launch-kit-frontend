@@ -80,9 +80,7 @@ const ToolbarContent = (props: Props) => {
             <LogoHeader
                 image={logo}
                 onClick={handleLogoClick}
-                text="FINANCE"
-              //  text={(generalConfig && generalConfig.title) || UI_GENERAL_TITLE}
-
+                text={(generalConfig && generalConfig.title) || UI_GENERAL_TITLE}
                 textColor={props.theme.componentsTheme.logoERC20TextColor}
             />
             <MarketsDropdownHeader shouldCloseDropdownBodyOnClick={false} />
